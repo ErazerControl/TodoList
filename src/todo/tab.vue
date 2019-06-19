@@ -1,11 +1,11 @@
 <template>
     <div class="helper">
-        <span class="lef">2 items left</span>
+        <span class="lef">{{unfinishCount}} items left</span>
         <span class="tabs">
             <span v-for="state in states" :key="state" :class="['state', filter == state ? 'actived':'']" @click="toggleFilter(state)">
                 {{state}}</span>
         </span>
-        <span @click="clearCompleted"></span>
+        <span @click="clearCompleted">清除完成的任务</span>
     </div>
 </template>
 <script>
@@ -14,6 +14,16 @@ export default {
         filter:{
             type:String,
             required:true
+        },
+        todos:{
+            type:Array,
+            required:true
+        }
+    },
+    computed:{
+        unfinishCount() {
+            console.log(this.todos)
+            return this.todos.filter(todo => todo.completed == false).length
         }
     },
     data(){
@@ -27,9 +37,11 @@ export default {
     },
     methods:{
         toggleFilter(state){
-            filter=state
+            this.$emit('changeTab',state)
         },
-        clearCompleted(){}
+        clearCompleted(){
+            this.$emit('clear')
+        }
     }
 }
 </script>
